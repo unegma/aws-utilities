@@ -7,11 +7,13 @@ Utility functions for interacting with AWS APIs
 
 ```
 const {
-  SLACK_ERROR_LOG
+  SLACK_ERROR_LOG,
+  AWS_REGION
 } = process.env;
-const tCLib = new AWSUtilities(SLACK_ERROR_LOG); // with slack logging
+const awsUtilities = new AWSUtilities(AWS_REGION, SLACK_ERROR_LOG); // with slack logging (optional)
 
 ...
-
+// invokeLambda
+awsUtilities.invokeLambda('functionName', data);
 ```
 
