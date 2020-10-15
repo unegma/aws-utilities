@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/index.spec.js",
+    "update-install": "npm update; npm install;",
     "pub-major": "bash ./publish.sh -v major",
     "pub-minor": "bash ./publish.sh -v minor",
     "pub-patch": "bash ./publish.sh -v patch"
