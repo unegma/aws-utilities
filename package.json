@@ -1,0 +1,40 @@
+{
+  "name": "@unegma/aws-utilities",
+  "version": "1.0.0",
+  "description": "Utility functions for interacting with AWS APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test/index.spec.js",
+    "pub-major": "bash ./publish.sh -v major",
+    "pub-minor": "bash ./publish.sh -v minor",
+    "pub-patch": "bash ./publish.sh -v patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unegma/aws-utilities.git"
+  },
+  "keywords": [
+    "aws",
+    "api"
+  ],
+  "author": "Unegma lTD",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unegma/tutorcruncher-aws/issues"
+  },
+  "homepage": "https://github.com/unegma/tutorcruncher-aws#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.1.3",
+    "nock": "^13.0.4",
+    "node-fetch": "^2.6.0",
+    "sinon": "^9.0.3",
+    "sinon-chai": "^3.5.0"
+  },
+  "dependencies": {
+    "@unegma/error-handler": "^1.3.15",
+    "@unegma/utilities": "latest",
+    "node-fetch": "^2.6.1"
+  }
+}
