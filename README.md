@@ -1,5 +1,5 @@
 # AWS Utilities
-Utility functions for interacting with AWS APIs
+Wrapper utility functions for interacting with AWS SDKs and API
 
 ## Usage
 
