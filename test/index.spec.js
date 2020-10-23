@@ -1,6 +1,9 @@
+require('dotenv').config();
+const KMS_KEY_ID = process.env.KMS_KEY_ID;
+const SLACK_ERROR_LOG = process.env.SLACK_ERROR_LOG;
+const AWS_REGION = process.env.AWS_REGION;
+
 const awsSDK = require('aws-sdk');
-const AWS_REGION = 'eu-west-2';
-const SLACK_ERROR_LOG = 'https://example.com';
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
@@ -12,7 +15,7 @@ const AWSIntegrationError = require('../lib/errors/AWSIntegrationError');
 // https://stackoverflow.com/questions/26243647/sinon-stub-in-node-with-aws-sdk
 // https://stackoverflow.com/questions/61516053/sinon-stub-for-lambda-using-promises
 describe('AWS Utilities Test', () => {
-  let aws; let lambda; let sqs; let AWSUtilities;
+  let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities;
   before(function() {
     lambda = { invoke: sinon.stub().returnsThis(), promise: sinon.stub() };
     sqs = { sendMessage: sinon.stub().returnsThis(),
@@ -23,7 +26,8 @@ describe('AWS Utilities Test', () => {
     aws = sinon.stub(awsSDK, 'SQS').callsFake(() => lambda);
     aws.returns(lambda);
     aws.returns(sqs);
-    AWSUtilities = require('../lib/AWSUtilities'); // uses the above stubbed version of aws
+    AWSUtilities = require('../index').AWSUtilities; // uses the above stubbed version of aws
+    EncryptionUtilities = require('../index').EncryptionUtilities; // uses the above stubbed version of aws
   });
 
   after(function() {
@@ -76,5 +80,34 @@ describe('AWS Utilities Test', () => {
     expect(sqs.deleteMessage).to.have.been.calledOnce;
   });
 
+  // todo the below are not yet stubbed
+
+  // currently a live KMS test
+  it('should encrypt using KMS and single encoding', async () => {
+    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
+    const response = await encryptionUtilities.encrypt("something", 'single');
+    console.log(response);
+  });
+
+  // currently a live KMS test
+  it('should decrypt using KMS and single decoding', async () => {
+    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
+    const response = await encryptionUtilities.decrypt(process.env.SINGLE_KMS_ENCRYPTED_STRING, 'single');
+    expect(response).to.equal("something");
+  });
+
+  // currently a live KMS test
+  it('should encrypt using KMS and double encoding', async () => {
+    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
+    const response = await encryptionUtilities.encrypt("something");
+    console.log(response);
+  });
+
+  // currently a live KMS test
+  it('should decrypt using KMS and double decoding', async () => {
+    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
+    const response = await encryptionUtilities.decrypt(process.env.DOUBLE_KMS_ENCRYPTED_STRING);
+    expect(response).to.equal("something");
+  });
 
 });
