@@ -118,4 +118,12 @@ describe('AWS Utilities Test', () => {
     const response = await dbUtilities.getUser('user@example.com');
     expect(response.Name).to.equal("User");
   });
+
+  // currently a live AWS test
+  it('should get all users from a dynamodb database', async () => {
+    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await dbUtilities.getUsers();
+    expect(response[0].Name).to.equal("User2");
+    expect(response[1].Name).to.equal("User");
+  });
 });
