@@ -144,4 +144,12 @@ describe('AWS Utilities Test', () => {
     // expect(response.Name).to.equal("User");
     // todo add correct expectation
   });
+
+  // currently a live AWS test
+  it('should delete a user in the database', async () => {
+    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await dbUtilities.deleteUser(`user2@example.com`);
+    // expect(response.Name).to.equal("User");
+    // todo add correct expectation
+  });
 });
