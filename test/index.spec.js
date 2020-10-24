@@ -126,4 +126,12 @@ describe('AWS Utilities Test', () => {
     expect(response[0].Name).to.equal("User2");
     expect(response[1].Name).to.equal("User");
   });
+
+  // currently a live AWS test
+  it('should create a user in the database', async () => {
+    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
+    let now = Date.now();
+    const response = await dbUtilities.createUser(`user${now}@example.com`, `User${now}`);
+    expect(response.Name).to.equal("User");
+  });
 });
