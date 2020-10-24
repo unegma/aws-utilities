@@ -15,7 +15,7 @@ const AWSIntegrationError = require('../lib/errors/AWSIntegrationError');
 // https://stackoverflow.com/questions/26243647/sinon-stub-in-node-with-aws-sdk
 // https://stackoverflow.com/questions/61516053/sinon-stub-for-lambda-using-promises
 describe('AWS Utilities Test', () => {
-  let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities;
+  let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities; let DBUtilities;
   before(function() {
     lambda = { invoke: sinon.stub().returnsThis(), promise: sinon.stub() };
     sqs = { sendMessage: sinon.stub().returnsThis(),
@@ -28,6 +28,7 @@ describe('AWS Utilities Test', () => {
     aws.returns(sqs);
     AWSUtilities = require('../index').AWSUtilities; // uses the above stubbed version of aws
     EncryptionUtilities = require('../index').EncryptionUtilities; // uses the above stubbed version of aws
+    DBUtilities = require('../index').DBUtilities; // uses the above stubbed version of aws
   });
 
   after(function() {
@@ -110,4 +111,11 @@ describe('AWS Utilities Test', () => {
     expect(response).to.equal("something");
   });
 
+
+  // currently a live AWS test
+  it('should get a user from a dynamodb database', async () => {
+    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await dbUtilities.getUser('user@example.com');
+    expect(response.Name).to.equal("User");
+  });
 });
