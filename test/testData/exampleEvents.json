@@ -1,0 +1,41 @@
+{
+  "resource": "/webhooks",
+  "path": "/webhooks",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate",
+    "Content-Type": "application/json",
+    "Host": "12345.execute-api.eu-west-2.amazonaws.com",
+    "User-Agent": "TheAgent",
+    "Webhook-Signature": "",
+    "X-Amzn-Trace-Id": "",
+    "X-Forwarded-For": "",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "body": {
+    "events": [
+      {
+        "action": "MY_EVENT_1",
+        "verb": "Did a Thing",
+        "timestamp": "2020-01-01T20:55:44.380771Z",
+        "subject": {
+          "data": "Data 1",
+          "data2": "Data 2"
+        }
+      },
+      {
+        "action": "MY_EVENT_2",
+        "verb": "Did a Thing2",
+        "timestamp": "2020-01-01T20:55:44.380771Z",
+        "subject": {
+          "data": "Data 1",
+          "data2": "Data 2"
+        }
+      }
+    ],
+    "_request_time": 1234567890
+  },
+  "isBase64Encoded": false
+}
