@@ -17,7 +17,9 @@
   },
   "keywords": [
     "aws",
-    "api"
+    "wrapper",
+    "api",
+    "nodejs"
   ],
   "author": "Unegma lTD",
   "license": "MIT",
