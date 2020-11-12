@@ -1,7 +1,6 @@
-require('dotenv').config();
-const KMS_KEY_ID = process.env.KMS_KEY_ID;
-const SLACK_ERROR_LOG = process.env.SLACK_ERROR_LOG;
-const AWS_REGION = process.env.AWS_REGION;
+const KMS_KEY_ID = '12345';
+const SLACK_ERROR_LOG = 'https://example.com';
+const AWS_REGION = 'eu-west-2';
 
 const awsSDK = require('aws-sdk');
 const chai = require('chai');
@@ -16,7 +15,6 @@ const AWSIntegrationError = require('../lib/errors/AWSIntegrationError');
 // https://stackoverflow.com/questions/61516053/sinon-stub-for-lambda-using-promises
 describe('AWS Utilities Test', () => {
   let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities; let DBUtilities;
-  let exampleEventTemplate; let exampleEventsTemplate;
 
   before(function() {
     lambda = { invoke: sinon.stub().returnsThis(), promise: sinon.stub() };
@@ -31,9 +29,6 @@ describe('AWS Utilities Test', () => {
     AWSUtilities = require('../index').AWSUtilities; // uses the above stubbed version of aws
     EncryptionUtilities = require('../index').EncryptionUtilities; // uses the above stubbed version of aws
     DBUtilities = require('../index').DBUtilities; // uses the above stubbed version of aws
-
-    exampleEventTemplate = require('./testData/exampleEvent.json');
-    exampleEventsTemplate = require('./testData/exampleEvents.json');
   });
 
   after(function() {
@@ -84,104 +79,6 @@ describe('AWS Utilities Test', () => {
     const awsUtilities = new AWSUtilities(AWS_REGION);
     const response = await awsUtilities.deleteFromSQS('https://example.com', '12345');
     expect(sqs.deleteMessage).to.have.been.calledOnce;
-  });
-
-  // todo the below are not yet stubbed
-
-  // currently a live KMS test
-  it('should encrypt using KMS and single encoding', async () => {
-    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
-    const response = await encryptionUtilities.encrypt("something", 'single');
-    console.log(response);
-  });
-
-  // currently a live KMS test
-  it('should decrypt using KMS and single decoding', async () => {
-    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
-    const response = await encryptionUtilities.decrypt(process.env.SINGLE_KMS_ENCRYPTED_STRING, 'single');
-    expect(response).to.equal("something");
-  });
-
-  // currently a live KMS test
-  it('should encrypt using KMS and double encoding', async () => {
-    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
-    const response = await encryptionUtilities.encrypt("something");
-    console.log(response);
-  });
-
-  // currently a live KMS test
-  it('should decrypt using KMS and double decoding', async () => {
-    const encryptionUtilities = new EncryptionUtilities(AWS_REGION, KMS_KEY_ID, SLACK_ERROR_LOG);
-    const response = await encryptionUtilities.decrypt(process.env.DOUBLE_KMS_ENCRYPTED_STRING);
-    expect(response).to.equal("something");
-  });
-
-
-  // currently a live AWS test
-  it('should get a user from a dynamodb database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-    const response = await dbUtilities.getUser('user@example.com');
-    expect(response.Name).to.equal("User");
-  });
-
-  // currently a live AWS test
-  it('should get all users from a dynamodb database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-    const response = await dbUtilities.getUsers();
-    expect(response[0].Name).to.equal("User2");
-    expect(response[1].Name).to.equal("User");
-  });
-
-  // currently a live AWS test
-  it('should create a user in the database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-    let now = Date.now();
-    const response = await dbUtilities.createUser(`user${now}@example.com`, `User${now}`);
-    // expect(response.Name).to.equal("User");
-    // todo add correct expectation
-  });
-
-  // currently a live AWS test
-  it('should update a user in the database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-    let now = Date.now();
-    const response = await dbUtilities.updateUser(`user2@example.com`, `User${now}`);
-    // expect(response.Name).to.equal("User");
-    // todo add correct expectation
-  });
-
-  // currently a live AWS test
-  it('should delete a user in the database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-    const response = await dbUtilities.deleteUser(`user2@example.com`);
-    // expect(response.Name).to.equal("User");
-    // todo add correct expectation
-  });
-
-  // event store
-  // currently a live AWS test
-  it('should save an event in the database', async () => {
-    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
-
-    // 2 events
-
-    // deep clone from template: be aware, this converts dates to strings
-    let exampleEvents = JSON.parse(JSON.stringify(exampleEventsTemplate));
-    exampleEvents.body = JSON.stringify(exampleEvents.body); // this is how it will arrive in AWS
-
-    // this should store 2 events
-    const response = await dbUtilities.saveEvent(exampleEvents, false);
-    console.log('Done');
-
-    // 1 event
-
-    // deep clone from template: be aware, this converts dates to strings
-    let exampleEvent = JSON.parse(JSON.stringify(exampleEventTemplate));
-    exampleEvent.body = JSON.stringify(exampleEvent.body); // this is how it will arrive in AWS
-
-    // this should store 1 events
-    const response2 = await dbUtilities.saveEvent(exampleEvent, false);
-    console.log('Done');
   });
 
 });
