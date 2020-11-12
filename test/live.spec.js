@@ -27,9 +27,9 @@ describe('AWS Utilities Test', () => {
     aws = sinon.stub(awsSDK, 'SQS').callsFake(() => lambda);
     aws.returns(lambda);
     aws.returns(sqs);
-    AWSUtilities = require('../index').AWSUtilities; // uses the above stubbed version of aws
-    EncryptionUtilities = require('../index').EncryptionUtilities; // uses the above stubbed version of aws
-    DBUtilities = require('../index').DBUtilities; // uses the above stubbed version of aws
+    AWSUtilities = require('../index').AWSUtilities;
+    EncryptionUtilities = require('../index').EncryptionUtilities;
+    DBUtilities = require('../index').DBUtilities;
   });
 
   after(function() {
