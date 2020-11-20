@@ -109,4 +109,13 @@ describe('AWS Utilities Test', () => {
     // todo add correct expectation
   });
 
+  // currently a live AWS test
+  it('should get all completed lessons from database', async () => {
+    const dbUtilities = new DBUtilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await dbUtilities.getAllFromDB('Lessons', '#Status = :status',
+        { '#Status': 'Status' } , { ":status": 'complete' });
+
+    console.log(response);
+  });
+
 });
