@@ -57,7 +57,18 @@ describe('DB Utilities Test', () => {
     sinon.assert.calledWith(documentClient.update, {
       "ExpressionAttributeNames": {"#deleted": "deleted"},
       "ExpressionAttributeValues": {":true": true},
-      "Key": {"ID": 123},
+      "Key": { ID: 123 },
+      "TableName": "Table",
+      "UpdateExpression": "set #deleted = :true"
+    });
+
+    const response2 = await dbUtilities.deleteInDB('Table', ['ID', 'SortKey'], [123, 456], true);
+
+    sinon.assert.calledWith(aws.config.update, { region: AWS_REGION });
+    sinon.assert.calledWith(documentClient.update, {
+      "ExpressionAttributeNames": {"#deleted": "deleted"},
+      "ExpressionAttributeValues": {":true": true},
+      "Key": { ID: 123, SortKey: 456 },
       "TableName": "Table",
       "UpdateExpression": "set #deleted = :true"
     });
