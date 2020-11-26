@@ -75,4 +75,33 @@ describe('DB Utilities Test', () => {
 
   });
 
+
+  it('should get from DynamoDB', async () => {
+    sinon.stub(aws.config, 'update');
+
+    const documentClient = {
+      get: sinon.stub().returnsThis(),
+      promise: sinon.stub()
+    };
+    // try: sinon.stub(aws, 'Kinesis').returns({ putRecord: sinon.stub().callsArgWith(1, null, true) })
+    sinon.stub(aws.DynamoDB, 'DocumentClient').callsFake(() => documentClient);
+
+    // these use the above stubbed version of aws
+    const DBUtilities = require('../index').DBUtilities;
+    const dbUtilities = new DBUtilities(AWS_REGION);
+    const response = await dbUtilities.getFromDB('Table', 'ID', null, 123);
+
+    sinon.assert.calledWith(aws.config.update, { region: AWS_REGION });
+    sinon.assert.calledWith(documentClient.get.firstCall, { Key: { ID: 123 }, TableName: "Table" });
+    console.log(JSON.stringify(documentClient.get.firstCall));
+
+    const response2 = await dbUtilities.getFromDB('Table', ['ID', 'SortKey'], null, [123, 456]);
+
+    sinon.assert.calledWith(aws.config.update, { region: AWS_REGION });
+    sinon.assert.calledWith(documentClient.get.secondCall, { Key: { ID: 123, SortKey: 456 }, TableName: "Table" });
+    console.log(JSON.stringify(documentClient.get.secondCall));
+
+  });
+
+
 });
