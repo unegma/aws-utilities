@@ -48,7 +48,7 @@ describe('Lambda Tests', () => {
   it('should invoke Lambda', async () => {
     sinon.stub(aws.config, 'update');
 
-    let lambda = {
+    const lambda = {
       invoke: sinon.stub().returnsThis(),
       promise: sinon.stub()
       // try: sandbox.stub().returns({ promise: () => Promise.resolve({}) })

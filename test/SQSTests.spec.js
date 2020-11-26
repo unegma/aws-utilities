@@ -20,7 +20,7 @@ describe('SQS Utilities Test', () => {
   it('should add to SQS', async () => {
     sinon.stub(aws.config, 'update');
 
-    let sqs = {
+    const sqs = {
       sendMessage: sinon.stub().returnsThis(),
       promise: sinon.stub()
     };
@@ -38,7 +38,7 @@ describe('SQS Utilities Test', () => {
   it('should get from SQS', async () => {
     sinon.stub(aws.config, 'update');
 
-    let sqs = {
+    const sqs = {
       receiveMessage: sinon.stub().returnsThis(),
       promise: sinon.stub()
     };
@@ -55,7 +55,7 @@ describe('SQS Utilities Test', () => {
 
   it('should delete from SQS', async () => {
     sinon.stub(aws.config, 'update');
-    let sqs = {
+    const sqs = {
       deleteMessage: sinon.stub().returnsThis(),
       promise: sinon.stub()
     };

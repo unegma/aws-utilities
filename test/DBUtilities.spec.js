@@ -26,7 +26,7 @@ describe('DB Utilities Test', () => {
 
   it('should configure aws', async () => {
     sinon.stub(aws.config, 'update');
-    let documentClient = {
+    const documentClient = {
       promise: sinon.stub()
     };
     // try: sinon.stub(aws, 'Kinesis').returns({ putRecord: sinon.stub().callsArgWith(1, null, true) })
@@ -41,7 +41,7 @@ describe('DB Utilities Test', () => {
   it('should delete from DynamoDB', async () => {
     sinon.stub(aws.config, 'update');
 
-    let documentClient = {
+    const documentClient = {
       update: sinon.stub().returnsThis(),
       promise: sinon.stub()
     };
