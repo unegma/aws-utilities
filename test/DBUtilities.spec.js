@@ -75,7 +75,6 @@ describe('DB Utilities Test', () => {
 
   });
 
-
   it('should get from DynamoDB', async () => {
     sinon.stub(aws.config, 'update');
 
@@ -102,6 +101,46 @@ describe('DB Utilities Test', () => {
     console.log(JSON.stringify(documentClient.get.secondCall));
 
   });
+
+  it('should update in DynamoDB', async () => {
+    sinon.stub(aws.config, 'update');
+
+    const documentClient = {
+      put: sinon.stub().returnsThis(),
+      update: sinon.stub().returnsThis(),
+      promise: sinon.stub()
+    };
+    // try: sinon.stub(aws, 'Kinesis').returns({ putRecord: sinon.stub().callsArgWith(1, null, true) })
+    sinon.stub(aws.DynamoDB, 'DocumentClient').callsFake(() => documentClient);
+
+    // these use the above stubbed version of aws
+    const DBUtilities = require('../index').DBUtilities;
+    const dbUtilities = new DBUtilities(AWS_REGION);
+    const response = await dbUtilities.updateInDB('Table', {ID: 123}, false);
+
+    sinon.assert.calledWith(aws.config.update, { region: AWS_REGION });
+    sinon.assert.calledWith(documentClient.put.firstCall, { Item: { ID: 123 }, TableName: "Table" });
+    console.log(JSON.stringify(documentClient.put.firstCall));
+
+    const response2 = await dbUtilities.updateInDB('Table', {
+       Key: {
+         ID: 123
+       },
+       UpdateExpression: 'SET #somethingKey = :somethingValue',
+       ExpressionAttributeNames: { '#somethingKey': 'SomethingKey' },
+       ExpressionAttributeValues: { ':somethingValue': 'SomethingValue' }
+    }, true);
+
+    sinon.assert.calledWith(aws.config.update, { region: AWS_REGION });
+    sinon.assert.calledWith(documentClient.update.firstCall, { Key: { ID: 123 }, TableName: "Table",
+      UpdateExpression: 'SET #somethingKey = :somethingValue',
+      ExpressionAttributeNames: { '#somethingKey': 'SomethingKey' },
+      ExpressionAttributeValues: { ':somethingValue': 'SomethingValue' }
+    });
+    console.log(JSON.stringify(documentClient.update.firstCall));
+
+  });
+
 
 
 });
