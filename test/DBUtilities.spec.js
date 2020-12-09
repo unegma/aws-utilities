@@ -9,6 +9,8 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const AWSIntegrationError = require('../lib/errors/AWSIntegrationError');
 
+// WARNING THESE TESTS CURRENTLY RUN INDIVIDUALLY, BUT NOT ALL TOGETHER, THIS NEEDS FIXING // TODO
+
 // These help:
 // https://stackoverflow.com/questions/26243647/sinon-stub-in-node-with-aws-sdk
 // https://stackoverflow.com/questions/61516053/sinon-stub-for-lambda-using-promises
