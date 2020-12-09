@@ -15,7 +15,7 @@ const AWSIntegrationError = require('../lib/errors/AWSIntegrationError');
 // https://stackoverflow.com/questions/26243647/sinon-stub-in-node-with-aws-sdk
 // https://stackoverflow.com/questions/61516053/sinon-stub-for-lambda-using-promises
 describe('AWS Utilities Test', () => {
-  let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities; let DBUtilities;
+  let aws; let lambda; let sqs; let AWSUtilities; let EncryptionUtilities; let DBUtilities; let S3Utilities;
 
   before(function() {
     lambda = { invoke: sinon.stub().returnsThis(), promise: sinon.stub() };
@@ -30,6 +30,7 @@ describe('AWS Utilities Test', () => {
     AWSUtilities = require('../index').AWSUtilities;
     EncryptionUtilities = require('../index').EncryptionUtilities;
     DBUtilities = require('../index').DBUtilities;
+    S3Utilities = require('../index').S3Utilities;
   });
 
   after(function() {
@@ -116,6 +117,18 @@ describe('AWS Utilities Test', () => {
         { '#deleted': 'deleted' } , { ":status": 'NULL' });
 
     console.log(response);
+  });
+
+  // currently a live AWS test
+  it('should add a line to a file in an s3 Bucket', async () => {
+    const BUCKET = 'untestbucket'; const FILE = 'unlog.log';
+    const s3Utilities = new S3Utilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await s3Utilities.getFile(BUCKET, FILE, true);
+
+    let content = response + '\n' + new Date() + '\t' + 'NewLine';
+    const response2 = await s3Utilities.writeFile(BUCKET, FILE, content);
+
+    console.log(response2);
   });
 
 });
