@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@unegma/error-handler": "^1.4.18",
+    "@unegma/logger": "^1.5.21",
     "@unegma/utilities": "latest",
     "aws-sdk": "^2.773.0",
     "node-fetch": "^2.6.1"
