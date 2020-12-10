@@ -131,4 +131,17 @@ describe('AWS Utilities Test', () => {
     console.log(response2);
   });
 
+
+  // currently a live AWS test
+  it('should create a file if it doesnt exist in an s3 Bucket', async () => {
+    const BUCKET = 'untestbucket'; const FILE = 'unlog.log';
+    const s3Utilities = new S3Utilities(AWS_REGION, SLACK_ERROR_LOG);
+    const response = await s3Utilities.getFile(BUCKET, FILE, true, true);
+
+    let content = response + '\n' + new Date() + '\t' + 'NewLine';
+    const response2 = await s3Utilities.writeFile(BUCKET, FILE, content);
+
+    console.log(response2);
+  });
+
 });
