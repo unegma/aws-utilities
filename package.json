@@ -1,6 +1,6 @@
 {
   "name": "@unegma/aws-utilities",
-  "version": "1.13.13",
+  "version": "1.14.13",
   "description": "Utility functions for interacting with AWS APIs",
   "main": "index.js",
   "scripts": {
